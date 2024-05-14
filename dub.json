@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"NerduMiner"
+	],
+	"copyright": "Copyright © 2023, NerduMiner",
+	"description": "A \"middle-of-the-road\" Pikmin 2 randomizer built with Archipelago in mind.",
+	"license": "MIT",
+	"name": "pikmin2randomizer"
+}
