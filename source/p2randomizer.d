@@ -3,6 +3,7 @@ module p2randomizer;
 import p2cave_serial;
 import p2gen_serial;
 import p2treasure_serial;
+import p2carcass_serial;
 import std.algorithm;
 import std.conv;
 import std.random;
@@ -37,6 +38,7 @@ struct P2Game
     P2GameStage stageInfo;
     //P2EnemyInfo enemyParms; TBD
     //P2TreasureInfo treasureParms; TBD
+    P2CarcassesInfo[] carcassConfig;
 }
 
 ///Contains a string id & cave object pair
@@ -58,6 +60,12 @@ struct P2GenInfo
 {
     string genName;
     P2Gen  genInfo;
+}
+
+struct P2CarcassesInfo
+{
+    string carcassName;
+    P2Carcass carcassInfo;
 }
 
 string p2CaveFolder = "root/files/user/Mukki/mapunits/caveinfo/";
@@ -246,32 +254,48 @@ int randomizeGame(P2RandoOptions randoSettings)
             CaveSwapInfo[] caveList;
             // Ugly but I've yet to find a clean for loop method for this
             // Instanting a fixed length array bars us from randomShuffle since it fails isRandomAccess
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[0].stageCave.caves[1].treasureNum, 
-                game.stageInfo.stages[0].stageCave.caves[1].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[0].stageCave.caves[2].treasureNum, 
-                game.stageInfo.stages[0].stageCave.caves[2].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[1].stageCave.caves[0].treasureNum, 
-                game.stageInfo.stages[1].stageCave.caves[0].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[1].stageCave.caves[1].treasureNum, 
-                game.stageInfo.stages[1].stageCave.caves[1].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[1].stageCave.caves[2].treasureNum, 
-                game.stageInfo.stages[1].stageCave.caves[2].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[1].stageCave.caves[3].treasureNum, 
-                game.stageInfo.stages[1].stageCave.caves[3].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[2].stageCave.caves[0].treasureNum, 
-                game.stageInfo.stages[2].stageCave.caves[0].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[2].stageCave.caves[1].treasureNum, 
-                game.stageInfo.stages[2].stageCave.caves[1].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[2].stageCave.caves[2].treasureNum, 
-                game.stageInfo.stages[2].stageCave.caves[2].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[2].stageCave.caves[3].treasureNum, 
-                game.stageInfo.stages[2].stageCave.caves[3].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[3].stageCave.caves[0].treasureNum, 
-                game.stageInfo.stages[3].stageCave.caves[0].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[3].stageCave.caves[1].treasureNum, 
-                game.stageInfo.stages[3].stageCave.caves[1].caveFilename);
-            caveList ~= CaveSwapInfo(game.stageInfo.stages[3].stageCave.caves[2].treasureNum, 
-                game.stageInfo.stages[3].stageCave.caves[2].caveFilename);
+            
+            int stagesR = 0;
+            int cavesR = 1;
+            while (stagesR != 3 && cavesR != 3) {
+                caveList ~= CaveSwapInfo(game.stageInfo.stages[stagesR].stageCave.caves[cavesR].treasureNum, 
+                game.stageInfo.stages[stagesR].stageCave.caves[cavesR].caveFilename);
+                cavesR++;
+                if (cavesR == 3 && stagesR == 0) {
+                    cavesR = 0;
+                    stagesR++;
+                } elif (cavesR == 4); {
+                    cavesR = 0;
+                    stagesR++;
+                }
+            }
+
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[0].stageCave.caves[1].treasureNum, 
+           //     game.stageInfo.stages[0].stageCave.caves[1].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[0].stageCave.caves[2].treasureNum, 
+           //     game.stageInfo.stages[0].stageCave.caves[2].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[1].stageCave.caves[0].treasureNum, 
+           //     game.stageInfo.stages[1].stageCave.caves[0].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[1].stageCave.caves[1].treasureNum, 
+           //     game.stageInfo.stages[1].stageCave.caves[1].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[1].stageCave.caves[2].treasureNum, 
+           //     game.stageInfo.stages[1].stageCave.caves[2].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[1].stageCave.caves[3].treasureNum, 
+           //    game.stageInfo.stages[1].stageCave.caves[3].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[2].stageCave.caves[0].treasureNum, 
+           //     game.stageInfo.stages[2].stageCave.caves[0].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[2].stageCave.caves[1].treasureNum, 
+           //     game.stageInfo.stages[2].stageCave.caves[1].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[2].stageCave.caves[2].treasureNum, 
+           //     game.stageInfo.stages[2].stageCave.caves[2].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[2].stageCave.caves[3].treasureNum, 
+           //     game.stageInfo.stages[2].stageCave.caves[3].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[3].stageCave.caves[0].treasureNum, 
+           //     game.stageInfo.stages[3].stageCave.caves[0].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[3].stageCave.caves[1].treasureNum, 
+           //     game.stageInfo.stages[3].stageCave.caves[1].caveFilename);
+           // caveList ~= CaveSwapInfo(game.stageInfo.stages[3].stageCave.caves[2].treasureNum, 
+           //     game.stageInfo.stages[3].stageCave.caves[2].caveFilename);
 
 
             // Shuffle the struct array
@@ -353,6 +377,7 @@ int randomizeGame(P2RandoOptions randoSettings)
             writeln("Done!");
             break;
         case 1: // Strip: Strip each cave of their sublevels and then randomize them around
+        
             /* MAIN LOGIC RULES:
                1. Emergence Cave sublevel 2 must be in new tutorial_1.txt in Vanilla Gametype
                2. WFG 3 must either be in tutorial_1.txt, forest_1.txt, or forest_2.txt in Vanilla Gametype
